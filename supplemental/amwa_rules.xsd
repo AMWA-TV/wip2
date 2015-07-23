@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.amwa.tv/experimental/as"
+           xmlns:amwa="http://www.amwa.tv/experimental/as"
+           elementFormDefault="qualified">
+
+  <xs:element name="Specification">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="caveat" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="RuleSet" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="rule" type="amwa:Rule" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="terms" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="term" type="amwa:Term" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="references" minOccurs="1" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="reference" type="amwa:reference" minOccurs="1" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="version" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="Rule">
+    <xs:sequence>
+      <xs:element name="Category" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="Definition" type="amwa:textWithRefs" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Shim" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="Term">
+    <xs:sequence>
+      <xs:element name="New" type="amwa:emptyElement" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Label" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Description" type="amwa:textWithRefs" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="reference">
+    <xs:sequence>
+      <xs:element name="New" type="amwa:emptyElement" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Label" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Title" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="URI" type="xs:anyURI" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID" use="required"/>
+  </xs:complexType>
+
+
+
+
+
+  <xs:complexType name="emptyElement">
+  </xs:complexType>
+
+  <xs:complexType name="textWithRefs" mixed="true">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="ref" type="amwa:ref" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="cite" type="amwa:cite" minOccurs="0" maxOccurs="unbounded" />
+      <xs:element name="conformance" type="amwa:conformanceType" minOccurs="1" maxOccurs="unbounded" />
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ref">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="to" type="xs:IDREF" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- amwa:cite is the same as amwa:ref, but we need to distinguish between the two types of element. -->
+  <xs:complexType name="cite">
+    <xs:complexContent>
+      <xs:extension base="amwa:ref">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="conformanceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="shall"/>
+      <xs:enumeration value="should"/>
+      <xs:enumeration value="may"/>
+      <xs:enumeration value="shall not"/>
+      <xs:enumeration value="should not"/>
+      <xs:enumeration value="may not"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

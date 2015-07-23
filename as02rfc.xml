@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="rfc2629.xsd"
+  ipr="none" docName="draft-rcartwright-amwa-rfc-1">
+  <front>
+    <title abbrev="RESTful AS-02 API">
+      A RESTful Application Programming Interface for AMWA's AS-02
+    </title>
+    <author initials="R.I." surname="Cartwright" fullname="Richard I. Cartwright">
+      <organization>Quantel Ltd.</organization>
+      <address>
+      	<postal>
+      	  <street>31 Turnpike Road</street>
+      	  <city>Newbury</city>
+      	  <code>RG14 2NX</code>
+      	  <country>UK</country>
+      	</postal>
+      	<phone>+44 7785 771568</phone>
+      	<email>Richard.Cartwright@quantel.com</email>
+      	<uri>http://www.quantel.com/</uri>
+      </address>
+    </author>
+    <author>
+      <organization abbrev="AMWA">
+        Advanced Media Workflow Association, Inc.
+      </organization>
+      <address>
+        <postal>
+          <street>436 N. Westfield Road</street>
+          <city>Madison</city>
+          <region>WI</region>
+          <code>53717</code>
+          <country>USA</country>
+        </postal>
+        <phone>+1-608-513-5992</phone>
+        <email>barbara.main@amwa.tv</email>
+        <uri>http://www.amwa.tv/</uri>
+      </address>
+    </author>
+    <date month="May" year="2015"/>
+    <area>Interface specifications</area>
+    <workgroup>RFC process committee</workgroup>
+    <keyword>REST</keyword>
+    <keyword>AS-02</keyword>
+    <keyword>API</keyword>
+    <keyword>MXF</keyword>
+    <keyword>versioning</keyword>    
+    <abstract >
+      <t>A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of AS-02 bundles and the 
+      assets that they contain. The aim of the API is that it makes the use of and testing of AS-02-based applications more efficient 
+      by separating the concerns of storing and retrieving media data from the mechanics of the underlying store, enabling the originally 
+      intended versioning workflows. </t>
+    </abstract>
+    <note title="RFC Process Committee expriment">
+      <t>This document is under development as part of an experimental process to produce the first AMWA request for comments.</t>
+    </note>
+  </front>
+  <middle>
+    <section anchor="intro" title="Introduction">
+      <section title="Overview">
+        <t>A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of AS-02 bundles and the assets 
+        that they contain. The aim of the API is that it makes the use of and testing of AS-02-based applications more efficient by 
+        separating the concerns of storing and retrieving media data from the mechanics of the underlying store, enabling the originally 
+        intended versioning workflows. The API will provide:
+        <list>
+          <t>an interface that abstracts developers from the detail of working with the underlying byte formats of MXF files and maintaining 
+          manifest files, loosely coupling the AS-02 application and store;</t>
+          <t>a means to dynamically change bundles by growing files, adding new audio tracks, working with vendor-specific data in the extras 
+          folder;</t>
+          <t>support for common read and write operations over units of essence - such as frames, samples and timecodes - and metadata 
+          structures, providing a stateless view into what is stored inside the MXF files.</t>
+        </list>
+        A common interface at this level provides a new media-rich interoperability point between applications and storage, where that storage 
+        can be interchanged between local disk, tiered storage, distributed file systems (e.g. GPFS) or object storage. As a REST API, the interface 
+        can take advantage of Internet-scaling techniques such as web caches and/or load balancing.
+        </t>
+      </section>
+      <section title="Document structure">
+        <t>This document ...</t>
+      </section>
+    </section>
+    <section title="Specification Method">
+    	<t>The API is specified and documented using the RAML specification, as documented by <eref target="http://raml.org/spec.html"/>.
+    	The specification is contained in <eref target="as02.raml"/>.</t>
+    	
+    	<t>The RAML specification makes use of XML schema and JSON LD schema.</t>
+    </section>
+    <section title=""></section>
+  </middle>
+  <back>
+    <references>
+      <reference anchor="refs.AS-02">
+        <front>
+          <title></title>
+          <author></author>
+          <date/>
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>

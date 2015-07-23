@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mft="http://www.amwa.tv/as-02/1.0/manifest"
+    targetNamespace="http://www.amwa.tv/as-02/1.0/manifest"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <!-- ManifestType -->
+    <xs:complexType name="ManifestType">
+        <xs:sequence>
+            <xs:element name="BundleName" type="xs:string"/>
+            <xs:element name="BundleID" type="mft:UUID"/>
+            <xs:element name="Creator" type="xs:string"/>
+            <xs:element name="CreationDate" type="xs:dateTime"/>
+            <xs:element name="AnnotationText" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="FileList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="File" type="mft:FileType" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other" processContents="lax"/>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+    <!-- FileType -->
+    <xs:complexType name="FileType">
+        <xs:sequence>
+            <xs:element name="FileID" type="mft:IdType"/>
+            <xs:element name="Role" type="mft:FileRole"/>
+            <xs:element name="Size" type="xs:nonNegativeInteger"/>
+            <xs:element name="Path" type="xs:anyURI"/>
+            <xs:element name="MIC" minOccurs="0">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:hexBinary">
+                            <xs:attribute name="type" type="mft:MICTypeType" use="required"/>
+                            <xs:attribute name="scope" type="mft:MICScopeType" use="required"/>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AnnotationText" type="xs:string" 
+                minOccurs="0" maxOccurs="unbounded"/>
+            <xs:any minOccurs="0" maxOccurs="unbounded" namespace="##other"
+                processContents="lax"/>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+    <!-- IdType -->
+    <xs:simpleType name="IdType">
+        <xs:union memberTypes="mft:UUID mft:UMID mft:UL mft:emptyID"/>
+    </xs:simpleType>    
+    <!-- UUID -->
+    <xs:simpleType name="UUID">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="urn:uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- UMID -->
+    <xs:simpleType name="UMID">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="urn:smpte:umid:([0-9a-fA-F]{8}\.){7}[0-9a-fA-F]{8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- UL -->
+    <xs:simpleType name="UL">
+        <xs:restriction base="xs:string">
+            <xs:pattern
+                value="urn:smpte:ul:([0-9a-fA-F]{8}\.){3}[0-9a-fA-F]{8}"/>
+        </xs:restriction>
+    </xs:simpleType>
+	<xs:simpleType name="emptyID">
+		<xs:restriction base="xs:string">
+			<xs:pattern value=""/>
+		</xs:restriction>
+	</xs:simpleType>
+    <!-- MICTypeType -->
+    <xs:simpleType name="MICTypeType">
+        <xs:restriction base="xs:string">
+           <xs:enumeration value="hmac-sha1"/>
+            <xs:enumeration value="crc32"/>
+            <xs:enumeration value="crc16"/>
+            <xs:enumeration value="md5"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- MICScopeType -->
+    <xs:simpleType name="MICScopeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="essence_only"/>
+            <xs:enumeration value="entire_file"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- FileRole -->
+    <xs:simpleType name="FileRole">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="file"/>
+            <xs:enumeration value="version"/>
+            <xs:enumeration value="essencecomponent"/>
+            <xs:enumeration value="shim"/>
+            <xs:enumeration value="manifest"/>
+            <xs:enumeration value="qc"/>
+            <xs:enumeration value="graphic"/>
+            <xs:enumeration value="caption"/>
+            <xs:enumeration value="folder"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="Manifest" type="mft:ManifestType"/>
+</xs:schema>

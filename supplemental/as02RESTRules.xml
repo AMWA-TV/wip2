@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<amwa:Specification version="0.1" 
+  xmlns:amwa="http://www.amwa.tv/experimental/as" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.amwa.tv/experimental/as amwa_rules.xsd ">
+  <amwa:RuleSet>
+    <amwa:rule id="Rule010">
+      <amwa:Category>REST</amwa:Category>
+      <amwa:Definition>An AS-02 RESTful API provides access to and mutation of a (possibly initially empty) collection of AS-02 bundles that 
+        have a <amwa:ref to="TS02">root path</amwa:ref> URL that <amwa:conformance>shall</amwa:conformance> be accessible via HTTP.</amwa:Definition>
+    </amwa:rule>
+    <amwa:rule id="Rule020">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>An AS-02 RESTful API has a bundle container resource as a sub-resource of the <amwa:ref to="TS02"">root path</amwa:ref> 
+       that <amwa:conformance>shall</amwa:conformance> have relative path "../bundle".</amwa:Definition></amwa:Bundle>
+    </amwa:rule>
+    <amwa:rule id="Rule030">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>A successful HTTP GET request to the bundle container resource that is constrained by skip, limit
+        and detail query parameters <amwa:conformance>shall</amwa:conformance> respond with a message body
+        containing XML element "raz:Bundles" that itself list of all known bundles within the scope of the parameterised request.</amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule030">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>A successful HTTP GET request to the bundle container resource that is constrained by skip, limit
+        and detail query parameters <amwa:conformance>shall</amwa:conformance> respond with a message body
+        containing XML element "raz:Bundles" that itself list of all known bundles within the scope of the parameterised request.</amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule050">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>A successful HTTP POST request to a bundle container resource with query parameters ID, name and creator <amwa:conformance>shall</amwa:conformance> create 
+        an empty bundle and respond with a message that has an XML representation of the bundle manifest of type "as02:Manifest", response code 201 and the location path set
+        to an absolute URL path for the new bundle resource.
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule060">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>An HTTP POST request to the bundle container resource with a query ID parameter equal to that of the identifier of an existing bundle 
+        <amwa:conformance>shall</amwa:conformance> fail, not create a new bundle and respond with an error message and response code 400.
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule070">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>An HTTP POST request to the bundle container resource with a query ID parameter equal to that of the identifier of an existing bundle 
+        <amwa:conformance>shall</amwa:conformance> fail, not create a new bundle and respond with an error message and status code 400.
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule080">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>An HTTP POST request to the bundle container resource with a query ID parameter equal to that of the bundle name of an existing bundle 
+        <amwa:conformance>shall</amwa:conformance> fail, not create a new bundle and respond with an error message and status code 400.
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule090">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>A bundle container resource has bundle resources as sub resources that <amwa:conformance>shall</amwa:conformance> be accessed at
+        a relative path of the either: the bundle's full identifier, the bundle identifier with the preceding prefix of "urn:uuid:" or "urn:smpte:ul:" or "urn:smpte:umid:" 
+        stripped, or by the case sensitive bundle name (using URL escaping as required).
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    <amwa:rule id="Rule100">
+      <amwa:Category>Bundle</amwa:Category>
+      <amwa:Definition>An HTTP GET request for a bundle resource that exists in the collection of bundles <amwa:conformance>shall</amwa:conformance> have a
+       response that contains the bundle's manifest file as its body with status 200. 
+      </amwa:Definition> <!-- Add information about skip and limit parameters. -->
+    </amwa:rule>
+    
+  </amwa:RuleSet>
+  <amwa:terms>
+    <amwa:term id="TS01">
+      <amwa:Label>Bundle</amwa:Label>
+      <amwa:Description/>
+    </amwa:term>
+    <amwa:term id="TS02">
+      <amwa:Label>Root Path</amwa:Label>
+      <amwa:Description/>
+    </amwa:term>
+  </amwa:terms>
+  <amwa:references>
+    <amwa:reference id="idvalue2">
+      <amwa:Label>amwa:Label</amwa:Label>
+      <amwa:Title>amwa:Title</amwa:Title>
+      <amwa:URI>http://tempuri.org</amwa:URI>
+    </amwa:reference>
+  </amwa:references>
+</amwa:Specification>

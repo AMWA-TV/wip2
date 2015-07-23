@@ -1,0 +1,470 @@
+<?xml version="1.0"?>
+<amwa:Specification xmlns:amwa="http://www.amwa.tv/experimental/as" xmlns="http://www.amwa.tv/experimental/as" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="v0.2.2">
+  <amwa:caveat>THIS IS A DRAFT DOCUMENT. It does not include Rules for all aspects of the UK DPP Shims of AS-11.</amwa:caveat>
+  <amwa:RuleSet>
+    <rule id="Rule000">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> conform to <cite to="R001">SMPTE ST 377-1:2011</cite>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule005">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> conform to <cite to="R505">SMPTE ST 377:2004</cite>.</Definition>
+      <Shim>UKDPP_SD</Shim>
+    </rule>
+    <rule id="Rule010">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> conform to <ref to="T029">Operational Pattern OP1a</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule020">
+      <Category>MXF</Category>
+      <Definition>The <ref to="T021">Header Partition</ref> <conformance>shall</conformance> be "Closed" and "Complete".</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule030">
+      <Category>MXF</Category>
+      <Definition>When first created, the file <conformance>should</conformance> include a <ref to="T024">KLV Fill</ref> item of at least 8192 bytes in total length following the <ref to="T020">Header Metadata</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule040">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> contain a <ref to="T505">Random Index Pack</ref>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule050">
+      <Category>MXF</Category>
+      <Definition>Every <ref to="T525">Partition</ref> in the file <conformance>shall</conformance> use a <ref to="T504">KLV Alignment Grid</ref> value of 1.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule060">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> contain a complete <ref to="T023">Index Table</ref> before the <ref to="T521">Essence</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule070">
+      <Category>MXF</Category>
+      <Definition>The <ref to="T023">Index Table</ref> <conformance>shall</conformance> index every <ref to="T507">Edit Unit</ref> of every <ref to="T508">Essence Element</ref> in the file.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule090">
+      <Category>MXF</Category>
+      <Definition>The file <conformance>shall</conformance> use the MXF <ref to="T018">Generic Container</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule100">
+      <Category>MXF</Category>
+      <Definition>The <ref to="T018">Generic Container</ref> <conformance>shall</conformance> be internal to the file and entirely contained in exactly one <ref to="T525">Partition</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule110">
+      <Category>MXF</Category>
+      <Definition>The <ref to="T018">Generic Container</ref> <conformance>shall</conformance> use <ref to="T510">Frame Wrapping</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule120">
+      <Category>MXF</Category>
+      <Definition>Each <ref to="T524">Essence Track</ref> in the <ref to="T520">Top-Level File Package</ref> <conformance>shall</conformance> be referenced by exactly one <ref to="T524">Essence Track</ref> in the <ref to="T026">Material Package</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule130">
+      <Category>MXF</Category>
+      <Category>Video</Category>
+      <Category>Audio</Category>
+      <Definition>The file <conformance>shall</conformance> conform to <cite to="R010">SMPTE ST 386:2004</cite> where the <ref to="T514">Picture Essence</ref> operates at "50 Mbit/s" using a "625/50 system".</Definition>
+      <Shim>UKDPP_SD</Shim>
+    </rule>
+    <rule id="Rule140">
+      <Category>Audio</Category>
+      <Definition>Only the channels in the <ref to="T502">8-channel AES3 element</ref> with a "channel number" of 1, 2, 3 or 4 <conformance>shall</conformance> be "valid".</Definition>
+      <Shim>UKDPP_SD</Shim>
+    </rule>
+    <rule id="Rule160">
+      <Category>Audio</Category>
+      <Definition>The "channel number" of each channel in the <ref to="T502">8-channel AES3 element</ref> <conformance>shall</conformance> be the "Audio Track Number" defined in <cite to="R008">EBU R 48</cite> and <cite to="R009">EBU R 123</cite>.</Definition>
+      <Shim>UKDPP_SD</Shim>
+    </rule>
+    <rule id="Rule170">
+      <Category>Audio</Category>
+      <Definition>If the "Enum String" for the value of AS_11_Audio_Track_Layout has the value "EBU R 48: 2a" then each channel in the <ref to="T502">8-channel AES3 element</ref> with a "channel number" of 3 or 4 <conformance>shall</conformance> contain digital silence.</Definition>
+      <Shim>UKDPP_SD</Shim>
+    </rule>
+    <rule id="Rule180">
+      <Category>Video</Category>
+      <Category>MXF</Category>
+      <Definition>The <ref to="T026">Material Package</ref> <conformance>shall</conformance> contain exactly one <ref to="T522">Picture Track</ref>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule190">
+      <Category>Video</Category>
+      <Definition>The <ref to="T514">Picture Essence</ref> <conformance>shall</conformance> conform to <cite to="R011">SMPTE RP 2027:2011</cite> where: "Class" is "100"; "Television system" is "1080 line system"; "Frame Frequency" is "50i"; "The sequence parameter set and the picture parameter set shall be placed after the access unit delimiter at the beginning of every coded frame". The <ref to="T531">AVC</ref> syntax elements "bit_depth_luma_minus8" and "bit_depth_chroma_minus8" <conformance>shall</conformance> be "2".</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule200">
+      <Category>Video</Category>
+      <Category>MXF</Category>
+      <Definition>The <ref to="T514">Picture Essence</ref> <conformance>shall</conformance> be mapped to the file as specified in <cite to="R521">SMPTE RP 2008:2008</cite>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule210">
+      <Category>Audio</Category>
+      <Category>MXF</Category>
+      <Definition>The <ref to="T026">Material Package</ref> <conformance>shall</conformance> contain either exactly 4 or exactly 16 <ref to="T518">Sound Track</ref>s.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule220">
+      <Category>Audio</Category>
+      <Category>MXF</Category>
+      <Definition>Each <ref to="T518">Sound Track</ref> <conformance>shall</conformance> represent exactly one <ref to="T512">Audio Channel</ref>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule230">
+      <Category>Audio</Category>
+      <Definition>For each <ref to="T512">Audio Channel</ref> the <ref to="T513">Sound Essence</ref> <conformance>shall</conformance> be "uncompressed PCM audio data" per <cite to="R016">SMPTE ST 382:2007</cite>, sampled at 48 kHz with 24 bits per sample.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule240">
+      <Category>Audio</Category>
+      <Category>MXF</Category>
+      <Definition>For each <ref to="T512">Audio Channel</ref> the <ref to="T513">Sound Essence</ref> <conformance>shall</conformance> be mapped to the file using any method that conforms to <cite to="R016">SMPTE ST 382:2007</cite>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule250">
+      <Category>Audio</Category>
+      <Category>MXF</Category>
+      <Definition>Each <ref to="T518">Sound Track</ref> in the <ref to="T026">Material Package</ref> <conformance>shall</conformance> have a value for "Track Number" that is unique within the set of <ref to="T518">Sound Track</ref>s in the <ref to="T026">Material Package</ref>. This value <conformance>shall</conformance> have the following constraints: minimum equal to 1; maximum equal to the count of <ref to="T518">Sound Track</ref>s in the <ref to="T026">Material Package</ref>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule260">
+      <Category>Audio</Category>
+      <Category>MXF</Category>
+      <Definition>The "Track Number" of each <ref to="T518">Sound Track</ref> in the <ref to="T026">Material Package</ref> <conformance>shall</conformance> be the "Audio Track Number" defined in <cite to="R008">EBU R 48</cite> and <cite to="R009">EBU R 123</cite>.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule270">
+      <Category>Audio</Category>
+      <Definition>If the "Enum String" for the value of AS_11_Audio_Track_Layout has the value "EBU R 48: 2a" then for each <ref to="T518">Sound Track</ref> in the <ref to="T026">Material Package</ref> with a "Track Number" of 3 or 4 the <ref to="T513">Sound Essence</ref> <conformance>shall</conformance> contain digital silence.</Definition>
+      <Shim>UKDPP_HD</Shim>
+    </rule>
+    <rule id="Rule280">
+      <Category>MXF</Category>
+      <Category>Timecode</Category>
+      <Definition>The <ref to="T026">Material Package</ref> <conformance>shall</conformance> contain exactly one <ref to="T044">Timecode Track</ref>.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule290">
+      <Category>MXF</Category>
+      <Category>Timecode</Category>
+      <Definition>The <ref to="T044">Timecode Track</ref> in the <ref to="T026">Material Package</ref> <conformance>shall</conformance> define the authoritative program timecode.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+    <rule id="Rule300">
+      <Category>Subtitles</Category>
+      <Definition>The file <conformance>shall not</conformance> contain <ref to="T006">Closed Caption</ref>s.</Definition>
+      <amwa:Shim>UKDPP_HD</amwa:Shim>
+      <amwa:Shim>UKDPP_SD</amwa:Shim>
+    </rule>
+  </amwa:RuleSet>
+  <amwa:terms>
+    <term id="T502">
+      <New/>
+      <Label>8-channel AES3 element</Label>
+      <Description>A way of multiplexing up to eight channels of AES3 audio data. See Section 7.1 of <cite to="R017">SMPTE ST 331:2011</cite>.</Description>
+    </term>
+    <term id="T531">
+      <New/>
+      <Label>AVC</Label>
+      <Description>Advanced Video Coding. A video compression format described by <cite to="R504">ITU-T Rec H.264</cite>.</Description>
+    </term>
+    <term id="T003">
+      <Label>Ancillary Data</Label>
+      <Description>Any <ref to="T521">Essence</ref> data other than <ref to="T050">Video</ref> or <ref to="T004">Audio</ref> that may be embedded in a bit stream that carries <ref to="T050">Video</ref> and <ref to="T004">Audio</ref> and may be contained in the AS-11 file.</Description>
+    </term>
+    <term id="T004">
+      <Label>Audio</Label>
+      <Description><ref to="T521">Essence</ref> data of any type contained in the AS-11 file that contains audio data.</Description>
+    </term>
+    <term id="T512">
+      <New/>
+      <Label>Audio Channel</Label>
+      <Description>The "real world" concept of a single audio signal.</Description>
+    </term>
+    <term id="T006">
+      <Label>Closed Caption</Label>
+      <Description>Text transcription or description of the audio/video data. Synonymous with subtitling.</Description>
+    </term>
+    <term id="T534">
+      <Label>DM Framework</Label>
+      <Description>A defined collection of related <ref to="T007">Descriptive Metadata</ref> Sets. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T536">
+      <Label>DM Scheme</Label>
+      <Description>The mechanism for defining collections of <ref to="T007">Descriptive Metadata</ref>, comprising: a <ref to="T009">DM Scheme Label</ref> to identify the Scheme; the Scheme's specialized <ref to="T534">DM Framework</ref>; and the individual <ref to="T007">Descriptive Metadata</ref> items contained by that <ref to="T534">DM Framework</ref>.</Description>
+    </term>
+    <term id="T009">
+      <Label>DM Scheme Label</Label>
+      <Description>The value stored in an MXF file&#x2019;s Preface::DMSchemes property. See <cite to="R002">SMPTE EG 42:2004</cite>.</Description>
+    </term>
+    <term id="T007">
+      <Label>Descriptive Metadata</Label>
+      <Description>Generic term used for descriptive data stored in MXF files whose purpose is to describe <ref to="T521">Essence</ref> data.</Description>
+    </term>
+    <term id="T507">
+      <New/>
+      <Label>Edit Unit</Label>
+      <Description>A temporal division of a <ref to="T047">Track</ref>. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T521">
+      <New/>
+      <Label>Essence</Label>
+      <Description>A bitstream comprising picture, sound or data.</Description>
+    </term>
+    <term id="T508">
+      <New/>
+      <Label>Essence Element</Label>
+      <Description>The entire essence stream of a single <ref to="T047">Track</ref>. See <cite to="R003">SMPTE ST 379-2:2010</cite>.</Description>
+    </term>
+    <term id="T524">
+      <New/>
+      <Label>Essence Track</Label>
+      <Description>A type of <ref to="T047">Track</ref> that references <ref to="T521">Essence</ref>.</Description>
+    </term>
+    <term id="T510">
+      <New/>
+      <Label>Frame Wrapping</Label>
+      <Description>A method for interleaving <ref to="T508">Essence Element</ref>s for each frame of <ref to="T514">Picture Essence</ref>. See <cite to="R003">SMPTE ST 379-2:2010</cite>.</Description>
+    </term>
+    <term id="T018">
+      <Label>Generic Container</Label>
+      <Description>MXF data structure used to store <ref to="T521">Essence</ref> data in an MXF file. See <cite to="R003">SMPTE ST 379-2:2010</cite>.</Description>
+    </term>
+    <term id="T020">
+      <Label>Header Metadata</Label>
+      <Description>MXF data structures that collectively describe the data in the <ref to="T521">Essence</ref> data in an MXF file. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T021">
+      <Label>Header Partition</Label>
+      <Description>The MXF file <ref to="T525">Partition</ref> that contains the <ref to="T020">Header Metadata</ref>.</Description>
+    </term>
+    <term id="T023">
+      <Label>Index Table</Label>
+      <Description>A structure in an MXF file used to efficiently access <ref to="T521">Essence</ref> data. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T504">
+      <New/>
+      <Label>KLV Alignment Grid</Label>
+      <Description>A notional byte spacing which may be used to align KLV items within a <ref to="T525">Partition</ref>. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T024">
+      <Label>KLV Fill</Label>
+      <Description>Refers to the well-defined means of inserting empty, &#x201C;fill&#x201D;, data in an MXF file. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T028">
+      <Label>MPEG-2</Label>
+      <Description>ISO/IEC 13818 video compression</Description>
+    </term>
+    <term id="T026">
+      <Label>Material Package</Label>
+      <Description>An MXF data structure that contains <ref to="T047">Track</ref>s and identifiers that describe the file&#x2019;s content. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T029">
+      <Label>Operational Pattern OP1a</Label>
+      <Description>A constrained application of MXF. See <cite to="R004">SMPTE ST 378:2004</cite>.</Description>
+    </term>
+    <term id="T030">
+      <Label>Package</Label>
+      <Description>See <ref to="T041">Source Package</ref> and <ref to="T026">Material Package</ref>.</Description>
+    </term>
+    <term id="T525">
+      <New/>
+      <Label>Partition</Label>
+      <Description>A logical separation of the MXF file. An MXF file consists of a sequence of Partitions. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T514">
+      <New/>
+      <Label>Picture Essence</Label>
+      <Description>A type of <ref to="T521">Essence</ref> containing predominantly picture data.</Description>
+    </term>
+    <term id="T522">
+      <New/>
+      <Label>Picture Track</Label>
+      <Description>A type of <ref to="T524">Essence Track</ref> that references <ref to="T514">Picture Essence</ref>.</Description>
+    </term>
+    <term id="T505">
+      <New/>
+      <Label>Random Index Pack</Label>
+      <Description>A table that contains the byte offsets of all <ref to="T525">Partition</ref>s. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T034">
+      <Label>Segmentation</Label>
+      <Description>The description of regions in a program&#x2019;s <ref to="T521">Essence</ref> data that contain non-program content or points where the program content may be interrupted to insert non-program content at broadcast time.</Description>
+    </term>
+    <term id="T513">
+      <New/>
+      <Label>Sound Essence</Label>
+      <Description>A type of <ref to="T521">Essence</ref> containing sound data.</Description>
+    </term>
+    <term id="T518">
+      <New/>
+      <Label>Sound Track</Label>
+      <Description>A type of <ref to="T524">Essence Track</ref> that references <ref to="T513">Sound Essence</ref>.</Description>
+    </term>
+    <term id="T041">
+      <Label>Source Package</Label>
+      <Description>MXF data structure that describes source video, audio, or ancillary <ref to="T521">Essence</ref> data in an MXF file. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T509">
+      <New/>
+      <Label>Timecode</Label>
+      <Description>An annotation of elapsed time along a <ref to="T047">Track</ref>. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T043">
+      <Label>Timecode Component</Label>
+      <Description>An MXF structure that stores <ref to="T509">Timecode</ref> information. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T044">
+      <Label>Timecode Track</Label>
+      <Description>An MXF <ref to="T047">Track</ref> that stores one or more <ref to="T043">Timecode Component</ref>s.</Description>
+    </term>
+    <term id="T045">
+      <Label>Timeline Track</Label>
+      <Description>A specialized MXF track that describes a timeline by specifying an origin and rate. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T520">
+      <New/>
+      <Label>Top-Level File Package</Label>
+      <Description>A File Package that is internal to the file and which is directly referenced by a <ref to="T026">Material Package</ref> of the file. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T047">
+      <Label>Track</Label>
+      <Description>MXF data structure used to describe the content structure. See <cite to="R001">SMPTE ST 377-1:2011</cite>.</Description>
+    </term>
+    <term id="T528">
+      <New/>
+      <Label>VANC Packet</Label>
+      <Description>Vertical ancillary data packet. See <cite to="R503">SMPTE ST 291-1:2011</cite>.</Description>
+    </term>
+    <term id="T050">
+      <Label>Video</Label>
+      <Description><ref to="T521">Essence</ref> data of any form contained in the AS-11 file that contains video data.</Description>
+    </term>
+  </amwa:terms>
+  <amwa:references>
+    <reference id="R009">
+      <Label>EBU R 123</Label>
+      <Title>Audio Track Allocation for File Exchange</Title>
+      <URI>https://tech.ebu.ch/docs/r/r123.pdf</URI>
+    </reference>
+    <reference id="R008">
+      <Label>EBU R 48</Label>
+      <Title>Allocation of audio tracks on digital television recorders</Title>
+      <URI>https://tech.ebu.ch/publications/r048</URI>
+    </reference>
+    <reference id="R504">
+      <New/>
+      <Label>ITU-T Rec H.264</Label>
+      <Title>Advanced Video Coding for Generic Audio-Visual Services</Title>
+      <URI>https://www.itu.int/rec/T-REC-H.264</URI>
+    </reference>
+    <reference id="R005">
+      <Label>SMPTE 12-1:2008</Label>
+      <Title>Time and Control Code</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-268-4/st-12-1-2008/SEC1</URI>
+    </reference>
+    <reference id="R002">
+      <Label>SMPTE EG 42:2004</Label>
+      <Title>Material Exchange Format (MXF) &#x2014; MXF Descriptive Metadata</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-036-9/eg-42-2004/SEC1</URI>
+    </reference>
+    <reference id="R033">
+      <Label>SMPTE RDD 6:2008</Label>
+      <Title>Description and Guide to the Use of the Dolby E Audio Metadata Serial Bitstream</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-051-2/rdd-6-2008/SEC1</URI>
+    </reference>
+    <reference id="R521">
+      <New/>
+      <Label>SMPTE RP 2008:2008</Label>
+      <Title>Material Exchange Format &#x2014; Mapping AVC Streams into the MXF Generic Container</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-248-6/rp-2008-2008/SEC1</URI>
+    </reference>
+    <reference id="R011">
+      <Label>SMPTE RP 2027:2011</Label>
+      <Title>AVC Intra-frame Coding Specification for SSM Card Applications</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-252-3/rp-2027-2007/SEC1</URI>
+    </reference>
+    <reference id="R022">
+      <Label>SMPTE ST 2020-1:2008</Label>
+      <Title>Format of Audio Metadata and Description of the Asynchronous Serial Bitstream Transport</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-609-5/st-2020-1-2008/SEC1</URI>
+    </reference>
+    <reference id="R503">
+      <New/>
+      <Label>SMPTE ST 291-1:2011</Label>
+      <Title>Ancillary Data Packet and Space Formatting</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-739-9/st-291-1-2011/SEC1</URI>
+    </reference>
+    <reference id="R006">
+      <Label>SMPTE ST 298:2008</Label>
+      <Title>Universal Labels for Unique Identification of Digital Data</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-436-7/st-298-2009/SEC1</URI>
+    </reference>
+    <reference id="R017">
+      <Label>SMPTE ST 331:2011</Label>
+      <Title>Element and Metadata Definitions for the SDTI-CP</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-679-8/st-331-2011/SEC1</URI>
+    </reference>
+    <reference id="R001">
+      <Label>SMPTE ST 377-1:2011</Label>
+      <Title>Material Exchange Format (MXF) &#x2014; File Format Specification</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-517-3/st-377-1-2011/SEC1</URI>
+    </reference>
+    <reference id="R505">
+      <New/>
+      <Label>SMPTE ST 377:2004</Label>
+      <Title>Material Exchange Format (MXF) &#x2212;&#x2212; File Format Specification</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-768-9/st-377-2004/SEC1</URI>
+    </reference>
+    <reference id="R004">
+      <Label>SMPTE ST 378:2004</Label>
+      <Title>MXF Operational pattern 1A (Single Item, Single Package)</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-518-0/st-378-2004/SEC1</URI>
+    </reference>
+    <reference id="R003">
+      <Label>SMPTE ST 379-2:2010</Label>
+      <Title>MXF Generic Container</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-520-3/st-379-2-2010/SEC1</URI>
+    </reference>
+    <reference id="R030">
+      <Label>SMPTE ST 381-1:2005</Label>
+      <Title>Mapping MPEG Streams into the MXF Generic Container</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-683-5/st-381-1-2005/SEC1</URI>
+    </reference>
+    <reference id="R016">
+      <Label>SMPTE ST 382:2007</Label>
+      <Title>Mapping AES3 and Broadcast Wave Audio into the MXF Generic Container</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-524-1/st-382-2007/SEC1</URI>
+    </reference>
+    <reference id="R010">
+      <Label>SMPTE ST 386:2004</Label>
+      <Title>Mapping Type D-10 Essence Data to the MXF Generic Container</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-528-9/st-386-2004/SEC1</URI>
+    </reference>
+    <reference id="R031">
+      <Label>SMPTE ST 436:2006</Label>
+      <Title>MXF Mappings for VBI Lines and Ancillary Data Packets</Title>
+      <URI>http://standards.smpte.org/content/978-1-61482-599-9/st-436-2006/SEC1</URI>
+    </reference>
+  </amwa:references>
+</amwa:Specification>
