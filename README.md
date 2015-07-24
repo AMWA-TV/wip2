@@ -1,9 +1,9 @@
 # A RESTful Application Programming Interface for AMWA's AS-02
 
-**This specification is still in development and is yet to be tagged as published.**
+**This is work in progress, it will change and has not been adequately reviewed.**
 
-* [AMWA](http://www.amwa.tv) RFC: 2
-* Category: **Draft** Request for Comment
+* [AMWA](http://www.amwa.tv) WIP: 2
+* Category: Work in progress - candidate Proposed Specification
 * Author: [R. I. Cartwright](<richard.cartwright@quantel.com>), [Quantel Ltd](http://www.quantel.com/)
 * Date: July 2015
 * License: [Apache 2.0](../master/LICENSE.TXT), see [NOTICE](../master/NOTICE.TXT) 
