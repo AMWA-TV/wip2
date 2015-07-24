@@ -1,22 +1,22 @@
 # A RESTful Application Programming Interface for AMWA's AS-02
 
-* AMWA RFC: 2
+* [AMWA](http://www.amwa.tv) RFC: 2
 * Category: Draft Request for Comment
-* Author: R. I. Cartwright, Quantel Ltd
+* Author: [R. I. Cartwright](<richard.cartwright@quantel.com>), [Quantel Ltd](http://www.quantel.com/)
 * Date July 2015
-* License: [Apache 2.0](../LICENSE.TXT), see [NOTICE](../NOTICE.TXT) 
+* License: [Apache 2.0](../master/LICENSE.TXT), see [NOTICE](../master/NOTICE.TXT) 
 
 ## Abstract
 
-A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of [AS-02][1] bundles and the 
+A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of [AS-02] bundles and the 
 assets that they contain. The aim of the API is that it makes the use of and testing of AS-02-based applications more efficient 
 by separating the concerns of storing and retrieving media data from the mechanics of the underlying store, enabling the originally 
 intended versioning workflows. 
 
 ## Introduction
 
-A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of AS-02 bundles and the assets 
-that they contain. The aim of the API is that it makes the use of and testing of AS-02-based applications more efficient by 
+A RESTful API (AMWA interface specification) for the creation, reading, updating and deleting of [AS-02] bundles and the assets 
+that they contain. The aim of the API is that it makes the use of and testing of [AS-02]-based applications more efficient by 
 separating the concerns of storing and retrieving media data from the mechanics of the underlying store, enabling the originally 
 intended versioning workflows. The API will provide:
 
@@ -33,10 +33,10 @@ can take advantage of Internet-scaling techniques such as web caches and/or load
 
 ## Specification Method
 
-The API is specified and documented using the [RAML specification][2].
-The specification is contained in file ["as02.raml"](../as02.raml).
+The API is specified and documented using the [RAML Specification] v0.8.
+The specification is contained in file ["as02.raml"](../master/as02.raml).
     	
-The RAML specification makes use of [XML Schema][3] and [JSON LD Schema][4].
+The RAML specification makes use of [XML Schema] and [JSON LD Schema].
 
 ## Acknowledgements
 
@@ -45,10 +45,19 @@ the experimental phase of development of this work.
 
 ## References
 
-[1]: http://www.amwa.tv/downloads/specifications/AMWA-AS-02-10-2011-11-18_MXF_Versioning.pdf
-[2]: http://raml.org/spec.html
-[3]: http://www.w3.org/TR/xmlschema11-1/
-[4]: https://developers.google.com/schemas/formats/json-ld
+> Work out how to format these.
+
+```
+[AS-02]: http://www.amwa.tv/downloads/specifications/AMWA-AS-02-10-2011-11-18_MXF_Versioning.pdf
+[RAML Specification]: http://raml.org/spec.html
+[XML Schema]: http://www.w3.org/TR/xmlschema11-1/
+[JSON LD Schema]: https://developers.google.com/schemas/formats/json-ld
+```
+
+[AS-02]: http://www.amwa.tv/downloads/specifications/AMWA-AS-02-10-2011-11-18_MXF_Versioning.pdf
+[RAML Specification]: http://raml.org/spec.html
+[XML Schema]: http://www.w3.org/TR/xmlschema11-1/
+[JSON LD Schema]: https://developers.google.com/schemas/formats/json-ld
 
 ## Authors' Addresses
 
@@ -58,4 +67,4 @@ Turnpike Road
 Newbury
 Berkshire
 RG14 2NX
-<richard.cartwright@quantel.com
+<richard.cartwright@quantel.com>
