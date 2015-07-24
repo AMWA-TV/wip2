@@ -3,7 +3,7 @@
 * [AMWA](http://www.amwa.tv) RFC: 2
 * Category: Draft Request for Comment
 * Author: [R. I. Cartwright](<richard.cartwright@quantel.com>), [Quantel Ltd](http://www.quantel.com/)
-* Date July 2015
+* Date: July 2015
 * License: [Apache 2.0](../master/LICENSE.TXT), see [NOTICE](../master/NOTICE.TXT) 
 
 ## Abstract
@@ -61,10 +61,10 @@ the experimental phase of development of this work.
 
 ## Authors' Addresses
 
-Dr Richard Cartwright
-Quantel Ltd
-Turnpike Road
-Newbury
-Berkshire
-RG14 2NX
+Dr Richard Cartwright  
+Quantel Ltd  
+Turnpike Road  
+Newbury  
+Berkshire  
+RG14 2NX  
 <richard.cartwright@quantel.com>
