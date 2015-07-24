@@ -1,0 +1,7 @@
+FIMS REST API Reference Implementation
+Copyright 2014 Advanced Media Workflow Association
+
+This RFC was developed by the Advanced Media Workflow Association (AMWA).
+
+This product includes work developed at Quantel Ltd (http://www.quantel.com/).
+
