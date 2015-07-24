@@ -3,7 +3,7 @@
 **This specification is still in development and is yet to be tagged as published.**
 
 * [AMWA](http://www.amwa.tv) RFC: 2
-* Category: Draft Request for Comment
+* Category: **Draft** Request for Comment
 * Author: [R. I. Cartwright](<richard.cartwright@quantel.com>), [Quantel Ltd](http://www.quantel.com/)
 * Date: July 2015
 * License: [Apache 2.0](../master/LICENSE.TXT), see [NOTICE](../master/NOTICE.TXT) 
