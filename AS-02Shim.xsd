@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:shim="http://www.amwa.tv/as-02/1.0/shim"
+    targetNamespace="http://www.amwa.tv/as-02/1.0/shim"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified">
+    <!-- ShimType -->
+    <xs:complexType name="ShimType">
+        <xs:sequence>
+            <xs:element name="ShimName" type="xs:string"/>
+            <xs:element name="ShimID" type="xs:anyURI" minOccurs="0"/>
+            <xs:element name="AnnotationText" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ApplicationSpec" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+    <xs:element name="Shim" type="shim:ShimType"/>
+</xs:schema>

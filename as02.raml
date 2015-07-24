@@ -507,7 +507,7 @@ traits:
           a version file inside the AS-02 bundle with the same name as the folder and a `.mxf` file extension.          
         get: 
           is: as02FileDetails
-          description: Retrieve bundle manifest details about the version file.
+          description: Retrieve bundle manifest details type about the defualt version file.
         delete:
           description: Delete default version file for the bundle.
           responses:
@@ -517,7 +517,7 @@ traits:
           is: resourceNotFound
           get:
             description: |
-              Retrieve header information from the defauly version file in Reg-XML format, consisting of a serialization
+              Retrieve MXF header information from the default version file in Reg-XML format, consisting of a serialization
               of all non-stream data contained in the `Preface` element of the MXF file. 
             responses:
               200:
@@ -537,9 +537,13 @@ traits:
             body:
               application/mxf:
                 description: MXF file to upload as the new or replacement defuault version file.
-
-
-           
+            responses:
+              400:
+                application/xml:
+                  description: |
+                    Problem creating or replacing the default version file, such as it does not appear to be a valid version
+                    file.
+                  schema: !include error.xsd  
       /{versionID}:
         displayName: Specific Version File
         is: resourceNotFound
@@ -552,9 +556,65 @@ traits:
           * The name of the version file with or wothout the `.mxf` file extension.
         get: 
           is: as02FileDetails
+          description: Retrieve bundle manifest type details about the identified version file.
+        delete:
+          description: Delete default version file for the bundle.
+          responses:
+            204: # No content, so not defining a MIME type
+              description: Default version file successfully deleted from the bundle.   
+         
          
   /shim.xml:
+    is: resourceNotFound # Bundle not found or shim file does not exist
     displayName: Shim File
+    description: Access information about the AS-02 shim file stored set for this bundle.
+    get: 
+      description: Read the AS-02 shim file stored for this bundle.
+      responses:
+        200:
+          application/xml:
+            schema: !include AS-02Shim.xsd
+    put:
+      description: Create or replace the AS-02 shim file stored for this bundle.
+      body:
+        application/xml:
+          schema: !include AS-02Shim.xsd
+      responses:
+        204: # No content
+          description: Shim file was successfully parsed and stored inside the AS-02 bundle.
+        400:
+          application/xml:
+            description: Invalid AS-02 shim document posted.
+    post:
+      description: Create or replace the AS-02 shim file using query parameters.
+      queryParameters:
+        name:
+          type: string
+          description: Human-readable identifier for the shim.
+          required: false
+          default: QStack rasotwo default shim
+        ID:
+          type: string
+          description: |
+            URI for the shim, which should be a resovable reference to an external document that defines the shim.
+            Should be a valid URI but does not need to be resovable at the time of the request.
+          required: false
+          default: http://amwa.tv/as-02/defaultShim
+        annotation:
+          type: string
+          description: Set of descriptions for the shim.
+          repeat: true
+          required: false
+        responses:
+          201: 
+            application/xml:
+              description: The newly created or updated shim file for the bundle.
+              schema: !include AS-02Shim.xsd
+          400:
+            application/xml:
+              description: Problem with the query parameters passed.
+              schema: !include error.xsd
+      
 /ping:
   displayName: Service Status Check
       
