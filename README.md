@@ -5,6 +5,7 @@
 * Author: [R. I. Cartwright](<richard.cartwright@quantel.com>), [Quantel Ltd](http://www.quantel.com/)
 * Date: July 2015
 * License: [Apache 2.0](../master/LICENSE.TXT), see [NOTICE](../master/NOTICE.TXT) 
+* [IPR Policy](http://www.amwa.tv/about/policies/AMWA_IPR_Policy_V3.0.pdf): [Quantel contribution form](../master/RFC2_Quantel_Contribution.pdf)
 
 ## Abstract
 
@@ -41,7 +42,7 @@ The RAML specification makes use of [XML Schema] and [JSON LD Schema].
 ## Acknowledgements
 
 The author would like to thank the board and members of the AMWA and members of the AMWA RFC Committee for their assistance during
-the experimental phase of development of this work. 
+the experimental phase of development of the new AMWA process. 
 
 ## References
 
@@ -60,6 +61,8 @@ the experimental phase of development of this work.
 [JSON LD Schema]: https://developers.google.com/schemas/formats/json-ld
 
 ## Authors' Addresses
+
+> Use two spaces at the end of each line to request a linebreak.
 
 Dr Richard Cartwright  
 Quantel Ltd  
