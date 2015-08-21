@@ -73,3 +73,13 @@ Newbury
 Berkshire  
 RG14 2NX  
 <richard.cartwright@quantel.com>
+
+## Appendix: Links to useful tools
+
+The following tools were used in the preparation of this specification:
+
+* [RAML API Designer](https://github.com/mulesoft/api-designer)
+* [raml2html](https://github.com/kevinrenskers/raml2html)
+* [JSON Schema Lint](http://jsonschemalint.com/draft4/#")
+* [JSON Lint](http://jsonlint.com/)
+
