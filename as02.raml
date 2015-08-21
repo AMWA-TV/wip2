@@ -1,4 +1,19 @@
 #%RAML 0.8
+
+# Copyright 2015 Advanced Media Workflow Association
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); 
+# you may not use this file except in compliance with the License. 
+# You may obtain a copy of the License at 
+#
+# http://www.apache.org/licenses/LICENSE-2.0 
+#
+# Unless required by applicable law or agreed to in writing, software 
+# distributed under the License is distributed on an "AS IS" BASIS, 
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions and 
+# limitations under the License.
+
 title: AS-02 REST API
 version: 0.1
 baseUri: http://{server}/{api}/
@@ -12,36 +27,22 @@ baseUriParameters:
     type: string
 mediaType: application/xml
 documentation:
-  - title: Overview
+  - title: AMWA AS-02 RESTful API
     content: |
-      The _AS-02 RESTful API_ provides a means to manage a collection
-      of AS-02 bundles as they change and grow, whilst hiding some of 
-      the details of the underlying implementation, e.g. file system or
-      MXF files. The API is expected to be associated with a specific
-      _store_, such as a folder on a file system or a bucket of objects 
-      on an object store. 
-resourceTypes:
-  - file:
-      usage: Represents a plain file.
-      description: Represents a file of name <<resourcePathName>> in a parent folder called <<parent>>.
-      get:
-      post:
-      put:
-      delete:
-  - mxffile:
-      usage: Represents an MXF file.
-      description: |
-        Resource representing an MXF file and providing access to details about the file, it's raw stream, 
-        an XML serialisation of it's header as XML or it's descriptor as XML.
-      /{filename}:
-        type: 
-      /{filename}/stream:
-        type:
-      /{filename}/aaf-xml:
-        type:
-      /{filename}/aaf-xml/descriptor:
-        type:
-      
+      The _AS-02 RESTful API_ provides a means to manage a collection of AS-02 bundles as they change and grow, whilst hiding some of the details of the underlying implementation, e.g. file system or MXF files. The API is expected to be associated with a specific _store_, such as a folder on a file system or a bucket of objects on an object store.
+schemas: 
+  - Error: !include error.xsd
+    Manifest: !include AS-02Manifest.xsd
+    Shim: !include AS-02Shim.xsd
+    AS02File:  |
+      <xs:schema attributeFormDefault="unqualified"
+          elementFormDefault="qualified"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:as02="http://www.amwa.tv/as-02/1.0/manifest"
+          targetNamespace="http://www.quantel.com/qstack/rasotwo">
+        <import namespace="http://www.amwa.tv/as-02/1.0/manifest/" schemaLocation="AS-02Manifest.xsd"/>
+        <xs:element name="File" type="as02:FileType" minOccurs="1" maxOccurs="1"/>
+      </xs:schema>       
 traits:
   - paged:
       queryParameters:
@@ -64,8 +65,7 @@ traits:
             Amount of detail to return for each <<resourcePathName>> items in the collection, where:
             
             * _full_: Complete manifest details for each item.
-            * _summary_: Some useful details about each bundle, including its name, identifier, creator and 
-            number of files.
+            * _summary_: Some useful details about each bundle, including its name, identifier, creator and number of files.
             * _link_: A list of identifiers for bundles.
           required: false
           default: full
@@ -81,11 +81,18 @@ traits:
             * proceed to try to create a resource with the given identifier, or
             * respond with a bad request status.
           
-            This is an optional parameter of type [UUID](http://tools.ietf.org/html/rfc4122). If no id is provided, 
-            the service will generate a type 4 pseudo-random UUID to identify the resource.  
+            This is an optional parameter of type [UUID](http://tools.ietf.org/html/rfc4122). If no id is provided, the service will generate a type 4 pseudo-random UUID to identify the resource.
+  - resourceNotFound:
+      responses:
+        404:
+          description: The resource or one of its parent resources could not be found on this store.
+          body:
+            application/xml: 
+              schema: Error
   - as02FileList:
       responses:
         200:
+          description: Successful retrieval of a list of file details.
           body:
             application/xml:
               schema: |
@@ -111,54 +118,126 @@ traits:
                     </xs:complexType>
                   </xs:element>
                 </xs:schema>
-  - as02fileDetails:
-      responses:
-        200:
-          body:
-            application/xml:
-              schema: |
-                 <xs:schema attributeFormDefault="unqualified"
-                     elementFormDefault="qualified"
-                     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                     xmlns:as02="http://www.amwa.tv/as-02/1.0/manifest"
-                     targetNamespace="http://www.quantel.com/qstack/rasotwo">
-                   <import namespace="http://www.amwa.tv/as-02/1.0/manifest/" schemaLocation="AS-02Manifest.xsd"/>
-                   <xs:element name="File" type="as02:FileType" minOccurs="1" maxOccurs="1"/>
-                 </xs:schema>                
-  - as02fileCreated:
+  - as02FileCreated:
       responses:
         201:
+          description: Details of the newly created AS-02 file, now present on the containing bundle's manifest file.
+          headers: 
+            Location:
+              description:  Full URL path to the newly created AS02 file, which includes the file ID.
           body:
             application/xml:
-              schema: |
-                 <xs:schema attributeFormDefault="unqualified"
-                     elementFormDefault="qualified"
-                     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                     xmlns:as02="http://www.amwa.tv/as-02/1.0/manifest"
-                     targetNamespace="http://www.quantel.com/qstack/rasotwo">
-                   <import namespace="http://www.amwa.tv/as-02/1.0/manifest/" schemaLocation="AS-02Manifest.xsd"/>
-                   <xs:element name="File" type="as02:FileType" minOccurs="1" maxOccurs="1"/>
-                 </xs:schema>                
-          headers: 
-            Location: 
-              description: Full URL path to the newly created file, which includes the bundle ID and file ID. 
-                         
-  - resourceNotFound:
+              schema: AS02File
+  - as02FileDetails:
       responses:
-        404:
-          application/xml:
-            description: The resource could not be found on this store.
-            schema: !include error.xsd
-    
-         
+        200:
+          description: Details of the AS-02 file requested extracted from the containing bundle's manifest file.
+          body:
+            application/xml:
+              schema: AS02File
+resourceTypes:
+  - aafXml:
+      is: [resourceNotFound]
+      description: |
+        Read the MXF or AAF file in XML format. 
+            
+        Note that writing in Reg-XML format is not supported.
+      get:
+        description: |
+          Produces a MXF Reg-XML (SMPTE 2001-2) file as stored in the AS-02 bundle.
+        responses:
+          200:
+            description: 
+              Default MXF version file in XML format.
+            body:
+              application/xml:
+                schema: !include ST2001-2b-2013.xsd
+  - aafXmlDescriptor:
+      is: [resourceNotFound]
+      description: |
+        Read the AAF file descriptor from the picture, sound or data track of the primary package of the the MXF file in Reg-XML (SMPEG 2001-2) format. The file descriptor is in the same format as can be posted to create a new, empty essence component file.
+      get:
+        description: |
+          Produces a MXF Reg-XML (SMPTE 2001-2) file descriptor from the picture, sound or data track of the primary package of the the MXF file. 
+        responses:
+          200:
+            description:
+              File descriptor in XML format.
+            body:
+              application/xml:
+                schema: !include ST2001-2b-2013.xsd
+  - mxfStream:
+      is: [resourceNotFound]
+      description: Read or write an MXF file in its native KLV format.
+      get:
+        description: Reads the default version file as an MXF file as stored in the AS-02 bundle.
+        responses:
+          200:
+            body:
+              application/mxf:
+      put:
+        is: [as02FileDetails]
+        description: Create or replace the MXF file by providing a complete KLV-encoded version.
+        body:
+          application/mxf:
+        responses:
+          400:
+            description: |
+              Problem creating or replacing the default version file, such as it does not appear to be a valid AS-02 version file.
+            body:
+              application/xml:
+                schema: Error
+  - mediaInfo:
+      displayName: Essence component information
+      description: |
+        Provides summary information about an essence component file, including whether the file is still open for writing and the current duration available for reading through this API.
+      is: [resourceNotFound]
+      get:
+        description: Request media information about the essence component.
+        responses:
+          200:
+            body:
+              application/json:
+                schema: !include mediaInfo.json
+                example: |
+                  {
+                    "LastPartition": 3,
+                    "FileClosed": "closing",
+                    "EditRate": "60000/10",
+                    "Duration": 1234,
+                    "AccessUnitType": "iframeonly"
+                  }
+  - rangeScoped:
+      uriParameters:
+        range:
+          - type: string
+            pattern: "\\d+(\\s*-\\s*\\d+)?"
+            description: |
+              Range in and out points for the requested range measured in the _index units_ specified for the resource, counting from zero for the first index unit stored in the primary file package of the  mono essence component file. Values are inclusive.
+              
+              If only a single value is provided, the range is assumed to refer to a range of length one that includes the single indexed unit.
+          - type: string
+            pattern: "\\d+p(\\s*-\\s*\\d+p)?"
+            description: |
+              Range in and out points measured in the _index units_ specified for the resourcem, measured relative to any origin offset set for the essence component file. The origin states that the first from of essence stored in the essence component file is actually at an offset from the start of the original source material, so an origin stored in the file of `120` and and a range `122p-124p` represents an equivalent range `2-4`, the third, fourth and fifth index unit items stored in the file. Values are inclusive.
+              
+              If only a single value is provided, the range is assumed to refer to a range of length one that includes the single indexed unit. 
+          - type: string
+            pattern: "[0-2][0-9]:[0-5][0-9]:[0-5][0-9][\\:;\\.\\,][0-2][0-9](\\.[01])?(-[0-2][0-9]:[0-5][0-9]:[0-5][0-9][\\:;\\.\\,][0-2][0-9](\\.[01])?)?"
+            description: |
+              Range in and out points measured by dereferencing the timecode track stored in the essence component file. The values returned depend on the relationships between the timecode track and the primary file package. Values are inclusive. 
+              
+              If only a single value is provided, the range is assumed to refer to a range of length one that includes the single indexed unit. 
+        
 /bundle:
   displayName: Bundle Collection
-  description: Provides access to all bundles stored in this collection. 
-  get:
-    is: paged
+  description: Provides access to all bundles stored in this collection.
+  get: 
+    is: [paged]
     description: Retrieve a paged list of all stored bundles.
     responses:
       200:
+        description: Lists all stored bundles subject to the paging constraints.
         body:
           application/xml:
             schema: |
@@ -173,10 +252,10 @@ traits:
                   <xs:complexType>
                     <xs:choice>
                       <xs:element ref="as02:Manifest" minOccurs="0" maxOccurs="unbounded"/> <!-- for full listings-->
-                      <xs:element name="BundleSummary" minOccurs="0" maxOccurs="unbounded"> <!-- for summary listings-->
+                      <xs:element name="BundleSummary" minOccurs="0" maxOccurs="unbounded"> <!-- for summary listings -->
                         <xs:complexType>
                           <xs:sequence>
-                            <xs:element name="BundleName" minOccurs="1" maxOccurs="1" type="xs:string"/> <!-- Q note: implementation issue - elements in as02 namespace -->
+                            <xs:element name="BundleName" minOccurs="1" maxOccurs="1" type="xs:string"/> 
                             <xs:element name="BundleID" minOccurs="1" maxOccurs="1" type="as02:UUID"/>
                             <xs:element name="FileCount" minOccurs="1" maxOccuts="1" type="xs:integer"/>
                            </xs:sequence>
@@ -188,111 +267,116 @@ traits:
                 </xs:element>
               </xs:schema>
   post:
-    is: optionalCreationID
+    is: [optionalCreationID]
     description: |
-      Create a new _empty bundle_. An _empty bundle_ is a bundle with an empty _media_ folder and an empty 
-      _extra_ folder. 
+      Create a new _empty bundle_. An _empty bundle_ is a bundle with an empty _media_ folder and an empty _extra_ folder. 
       
-      The bundle must have a unique identifier (`BundleID`) and name (`BundleName`) on this store. The
-      creation date (`CreationDate`) property for the bundle will be automatically set to current system
-      time. Annotations (`AnnotationText`) in the bundle will be an initially empty list.
+      The bundle must have a unique identifier (`BundleID`) and name (`BundleName`) on this store. The creation date (`CreationDate`) property for the bundle will be automatically set to current system time. Annotations (`AnnotationText`) in the bundle will be an initially empty list.
     queryParameters:
-      name: 
+      name:
         type: string
         description: |
-          A unique name for this bundle on this store. If no name is provided, one will be automatically generated.
-          The name is stored in the bundle's manifest file as element `BundleName`.
+          A unique name for this bundle on this store. If no name is provided, one will be automatically generated. The name is stored in the bundle's manifest file as element `BundleName`.
         required: false
-      creator: 
+      creator:
         type: string
         description: |
-          Bundle creator property, stored in `Creator` property of the bundle manifest file. If no creator is
-          provided, a name for the local service may be used.
+          Bundle creator property, stored in `Creator` property of the bundle manifest file. If no creator is provided, a name for the local service may be used.
         required: false
     responses:
       201:
+        description: Successful creation of a new bundle.
+        headers:
+          Location:
+            description: Full URL path to the newly created bundle, which includes the bundle ID.
         body:
           application/xml:
-            schema: !include AS-02Manifest.xsd
-            headers: 
-              Location: 
-                description: Full URL path to the newly created bundle, which includes the bundle ID. 
+            schema: Manifest
       400:
+        description: Problem with the given parameters. Bundle could not be created.
         body:
           application/xml:
-            description: Problem with the given parameters.
-            schema: !include error.xsd         
+            schema: Error
   /{bundleID}:
-    displayName: Specific Bundle Details
-    is: resourceNotFound
-    description: |
-      Interact with a specific bundle and its sub-resources. <<bundleID>> may be a bundle name that matches the
-      `BundleName` value in a bundle manifest file or a UUID bundle identifier matching the `BundleID` property.
-      get:
-        description: Retrieve full details of the identified bundle.
-        responses:
-          200:
-            application/xml:
-              schema: !include AS-02Manifest.xsd            
-      delete:
-        description: Delete the specified bundle. The bundle will no longer appear in the list of bundles.
-        response:
-          200:
-            description: The bundle has been deleted successfully.
-      post:
+    displayName: Bundle
+    is: [resourceNotFound]
+    uriParameters:
+      bundleID:
+        type: string
         description: |
-          Update the identified bundle's details. 
-          
-          Note that the update of the bundle's name is not supported because
-          some bundle store implementations use the bundle name as a folder name on disk.
-        queryParameters:
-          creator: 
-            type: string
-            description: |
-              Bundle creator property, stored in `Creator` property of the bundle manifest file. If no creator is
-              provided, the existing creator name will remain.
-            required: false
-          annotation:
-            type: string
-            repeat: true
-            description: |
-              List of annotations to add to the current annotations set for the bundle, stored as a sequence of 
-              `AnnotationText` elements in the bundle manifest file.
-              
-              This API does not support the editing or removal of annotations.
-            required: false          
-        responses:
-          200:
+          Either a bundle name that matches the `BundleName` element in a bundle manifest file or a UUID bundle identifier matching the `BundleID` property.
+    description: Create, read and update a specific bundle and its sub-resources. 
+    get:
+      description: Retrieves the stored manifest describing __bundleID__.
+      responses:
+        200:
+          description:
+            Bundle exists and current state of manifest file is provided.
+          body:
             application/xml:
-              description: Successful update of the properties.
-              schema: !include AS-02Manifest.xsd
-          400:
+              schema: Manifest
+    delete:
+      description: Delete the specified bundle. The bundle will no longer appear in the list of bundles.
+      responses:
+        204: # Need to check that this is the response code produced by our code.
+          description: The bundle has been deleted successfully.
+    post:
+      description: |
+        Update the bundle's details by changing the _creator_ or adding an _annotation_.
+        
+        Note that the update of the bundle's name is not supported because some bundle store implementations use the bundle name as a folder name on disk.
+      queryParameters:
+        creator:
+          type: string
+          description: |
+            Bundle creator property, stored in `Creator` property of the bundle manifest file. If no creator is  provided, the existing creator name will remain.
+          required: false
+        annotation:
+          type: string
+          repeat: true
+          description: |
+            List of annotations to add to the current annotations set for the bundle, stored as a sequence of `AnnotationText` elements in the bundle manifest file.
+            
+            This API does not support the editing or removal of annotations.
+          required: false
+      responses:
+        200:
+          description: Successful update of the properties provided with the updated manifest included in the response.
+          body:
             application/xml:
-              description: Problem with the property values provided.
-              schema: !include error.xsd                 
+              schema: Manifest
+        400:
+          description: A problem was detected with the values that were provided.
+          body:
+            application/xml:
+              schema: Error
     /media:
-      displayName: Essence Component Collection
-      is: resourceNotFound
-      description: Access to all essence component files in the AS-02 bundle.
+      displayName: Media Collection
+      description: | 
+        Create, list, read, replace, grow and delete all essence component files (media files) in ths AS-02 bundle.
+      is: [resourceNotFound]
       get:
         is: [paged, as02FileList]
-        description: List details of all essence components in the bundle.
+        description: List details of all essence component files in the bundle.
       post:
         is: [optionalCreationID, as02FileCreated]
         description: |
-          Create a new empty essence component in the bundle using the given Reg-XML file descriptor.
+          Create a new empty essence component in the bundle using the given Reg-XML file descriptor. The essence 
+          component file will be open an ready for extension.
           
-          The body of the POST shall contain a valid serialization of a class that is the extension of 
-          an AAF FileDescriptor class.
+          The body of the POST shall contain a valid Reg-XML (SMPTE 2001-2) serialization of a class that is the extension of an AAF `FileDescriptor` class.
+          
+           * For video data, this will be an extension of `PictureDescriptor`. 
+           * For audio data, this will be a `SoundDescriptor` or one of its extensions.
+           * For ancilliary data, such as captions, this will an extension of `DataEssenceDescriptor`.
+          
+          Certain properties of the descriptor will be used by the AS-02 API to determine aspects of theessence component to be created, such as index type (clip or frame wrapped), index edit rate etc..
         queryParameters:
           rushID: 
             description: |
-              Identifier of a source package to set at the end of the source reference chain. If not set, one 
-              will be auto-generated.
+              Identifier of a source package to set at the end of the source reference chain. If not set, one will be auto-generated.
               
-              The purpose of defining a source package at the end of the reference chain is to provide a common
-              source identifier for essence components that:
-              
+              The purpose of defining a source package at the end of the reference chain is to provide a common source identifier for essence components that:
               * provide partial representations of the same source material, possibly consisting of overlapping 
               subclips;
               * provide different qualities of rendition of the same source material.
@@ -301,37 +385,25 @@ traits:
             required: false
           trackIndex:
             description: |
-              Non-negative integer number to identify the track (video) or group of tracks (audio) as essence component 
-              file names within the bundle, e.g. video0.mxf, audio3.mxf. 
+              Non-negative integer number to identify the track (video) or group of tracks (audio) as essence component file names within the bundle, e.g. video0.mxf, audio3.mxf. 
             type: integer
             minimum: 0
             default: 0
             required: false
           firstDecodeUnit:
             description: |
-              Index or decode time stamp (DTS) for the first expected access unit to be stored. As the access unit service 
-              can receive units out-of-order within a few playable seconds, it requires a starting window in which to expect 
-              the first unit. 
+              Index or decode time stamp (DTS) for the first expected access unit to be stored. As the access unit service can receive units out-of-order within a few playable seconds, it requires a starting window in which to expect the first unit. 
             type: integer
             default: 0
             required: false
           origin:
             description: |
-              A value measured in edit units for the offset from zero of an item of content, used to define the relationship
-              between the primary file package and the source package at the end of the source reference chain. THe value is a count 
-              of the number essence units missing after the zero point of the rush source material. More than one essence component 
-              for the same rushID can be stored in this or other bundles and each may have different extent.
+              A value measured in edit units for the offset from zero of an item of content, used to define the relationship between the primary file package and the source package at the end of the source reference chain. THe value is a count of the number essence units missing after the zero point of the rush source material. More than one essence component for the same rushID can be stored in this or other bundles and each may have different extent.
             type: integer
             default: 0
           offset:
             description: |
-              A slight nudge left or right required to align - often for reasons of lip sync.- related essence components. When creating 
-              a version file, one component, typically the video component, is nominated as the master component. The master component 
-              should have an offset value of zero, which is the default value for this query parameter. The audio component may have an 
-              offset value, measured in the sample rate of the audio, representing a slight offset that is required to synchronize the 
-              audio decoder with the video decoder. The opposite of MXF's Origin, this is a count of the number of missing samples that 
-              exist after the zero point. This will often be a negative value to ensure that the audio decoding can start prior to the 
-              presentation of the frame.
+              A slight nudge left or right required to align - often for reasons of lip sync.- related essence components. When creating a version file, one component, typically the video component, is nominated as the master component. The master component should have an offset value of zero, which is the default value for this query parameter. The audio component may have an offset value, measured in the sample rate of the audio, representing a slight offset that is required to synchronize the audio decoder with the video decoder. The opposite of MXF's Origin, this is a count of the number of missing samples that exist after the zero point. This will often be a negative value to ensure that the audio decoding can start prior to the presentation of the frame.
               
               Note that a timecode track in an audio essece component file is aligned with the origin, not with the offset.
             type: integer
@@ -339,140 +411,143 @@ traits:
             required: false
           startTimecode:
             description: |
-              Timecode value to set for the first access unit. This value is set to a default of the zero timecode (00:00:00:00 or 
-              00:00:00;00) if no value is provided. The value is overridden if timecode if provided per access unit or range of access units. 
-              Note that for audio tracks where the timecode is video frame rate based, the origin is applied but an offset of 0 is set 
-              for the timecode track. The timecode value is as specified in SMPTE ST0258 "Transfer of Edit Decision Lists", e.g. 01:02:03:04 
-              for non-drop-frame and 01:02:03;04 for drop frame.
+              Timecode value to set for the first access unit. This value is set to a default of the zero timecode (`00:00:00:00` or `00:00:00;00`) if no value is provided. The value is overridden if timecode if provided per access unit or range of access units. 
+              
+              Note that for audio tracks where the timecode is video frame rate based, the origin is applied but an offset of 0 is set for the timecode track. The timecode value is as specified in SMPTE ST0258 _Transfer of Edit Decision Lists_, e.g. `01:02:03:04` for non-drop-frame and `01:02:03;04` for drop frame.
             type: string
             pattern: "[0-2][0-9]:[0-5][0-9]:[0-5][0-9][:;][0-2][0-9](\\.[01])?"
-            default: 00:00:00:00
+            default: "00:00:00:00"
             required: false
           is90000Hz:
             description: |
-              Set to true to indicate that the access units will be posted with decode and/or presentation timestamps measured as per MPEG-2 
-              transport streams, at 90000Hz. The service should be able to cope with some jitter in this casd. If access units are to be 
-              sent based on a continuous, index-based counter, set the value to its default of `false`. 
+              Set to true to indicate that the access units will be posted with decode and/or presentation timestamps measured as per MPEG-2 transport streams, at 90000Hz. The service should be able to cope with some jitter in this case. If access units are to be sent based on a continuous, index-based counter, set the value to its default of `false`. 
             type: boolean
             default: false
             required: false
           samplesPerAccessUnit:
             description: |
-              Number of samples per access unit as received, which is typically the default value of 1 for video. Other common values are 
-              1024 for AAC audio and 192 for AES audio in a transport stream (SMPTE 0302). Note that this is not necessarily the value as 
-              stored in the MXF essence component, as in the case of AES audio is stored as clip-wrapped 48kHz PCM samples in MXF files.
+              Number of samples per access unit as received, which is typically the default value of 1 for video. Other common values are 1024 for AAC audio and 192 for AES audio in a transport stream (SMPTE 0302). Note that this is not necessarily the value as stored in the MXF essence component, as in the case of AES audio is stored as clip-wrapped 48kHz PCM samples in MXF files.
               
-              A known problem of this approach does not allow for variable numbers of samples per frame. To work with PCM audio at 30000/1001 or
-              60000/1001 frame rates, set to 8008 and compine PCM samples into five frame groups.
+              A known problem of this approach does not allow for variable numbers of samples per frame. To work with PCM audio at 30000/1001 or 60000/1001 frame rates, set to 8008 and compine PCM samples into five frame or ten frame groups.
             type: integer
             minimum: 1
             default: 1
             required: false
         body:
           application/xml:
-            description: |
-              A Reg-XML (SMPTE 2001-1-2013) representation of an AAF/MXF File Descriptor.
-              
-              * For video data, this will be an exension of `PictureDescriptor`.
-              * For audio data, this will be a `SoundDescriptor` or one of its extensions.
-              * For ancilliary data, such as captions, this will an extension of `DataEssenceDescriptor`.
-              
-              Certain properties of the descriptor will be used by the AS-02 API to determine aspects of the 
-              essence component to be created, such as index type (clip or frame wrapped), index edit rate etc..
-            schema: !include ST2001-2b-2014.xsd
+            schema: !include ST2001-2b-2013.xsd
+            example: |
+              ***  INCLUDE AN EXAMPLE ***
         responses:
           400:
+            description: |
+              Problem creating the essence compomponent for reasons including:
+                  
+              * Invalid query parameters;
+              * Conflicts with existing identifiers;
+              * Problem parsing the given file descriptor.
             body:
               application/xml:
-                description: |
-                  Problem creating the essence compomponent for reasons including:
-                  
-                  * Invalid query parameters;
-                  * Conflicts with existing identifiers;
-                  * Problem parsing the given file descriptor.
-                schema: !include error.xsd     
+                schema: Error
       /{mediaID}:
-        displayName: Specific Essence Component Details
-        description: Access to a specific essence component.
-        get: 
-          is: as02FileDetails
-          description: Retrieve details about a specific essence component.
-        
-        /accessunit:
-          displayName: Access Unit Information
-          /{accessUnitID}:
-            displauName: Access Unit Data
-        /gop:
-        displayName: GOP Information
-        description:
-        /{gopID}:
-          displayName: GOP Data
-          description:
-      /index:
-        displayName: Index Information
-        description:
-        /{indexID}:
-          displayName: Index Data
-          description:
-      /timecode:
-        displayName: Timecode Information
-        description:
-        /{timecodeID}:
-          displayName: Timecode Data
-          description:
-      /partition:
-        displayName: Partition Information
-        description:
-        /{partitionID}:
-          displayName: Partition Data
-          description:
-      /close:
-    /extra:
-      displayName: Extra Folder Contents
-      description: Access to vendor sub-folders of the AS-02 bundle's extra folder.
-      get:
-        is: paged
-        description: Retrieve a list of 
-    
-      /{vendorName}:
-        description: Represents a specific vendor subfolder of <<vendorName>> within the AS-02 bundle.
-        /{fileName}:
-          type: "{ file: { parent: <<vendor>> } }"
-        /{sf1}/{fileName}
-          type: "{ file: { parent: <<vendor>>/{sf1}/ } }"
-        /{sf1}/{sf2}/{fileName}
-          type: "{ file: { parent: "<<vendor>>/{sf1}/{sf2}/" }}"
-        /{sf1}/{sf2}/{sf3}/{fileName}
-          type: "{ file: { parent: "<<vendor>>/{sf1}/{sf2}/{sf3}/" }}"
+        displayName: Essence Component File
+        is: [resourceNotFound]
+        description: Create, read, update, close and delete a specific essence component file.
+        uriParameters:
+          mediaID:
+            type: string
+            description: |
+              Either the `FileID` or the part of the `Path` element after `media/` is the file entry stored in the manifest file. The `.mxf` file extension part at the end of the path may be omitted.
         get:
-          is: paged
-        
-      post:
-      delete:
-  /version:
-    displayName: Version File Collection
-      is: resourceNotFound
-      description: Access to all version files in the AS-02 bundle.
+          is: [as02FileDetails]
+          description: Access manifest information about the essence component file.
+        delete:
+          description: Delete the identified essence component file from the bundle.
+          responses:
+            204:
+              description: The identified essence component file has been deleted from the bundle.
+        /aaf-xml:
+          displayName: Essence Component File as XML
+          type: aafXml
+          description: |
+            Read the essence component file in XML format. 
+            
+            Note that writing in Reg-XML format is not supported.
+          /descriptor:
+            type: aafXmlDescriptor
+        /stream:
+          displayName: KLV-format Essence Component File
+          type: mxfStream
+        /close:
+          description: |
+            Initiate the process of closing the essence component file. An essence component file may be in one of three states according to this API:
+            
+            > __open__
+            >> Accepting new access units and not in a closed complete state on the underlying store.
+            
+            > __closing__
+            >> Not accepting new access units and may or may not be in a closed complete state on the underlying store.
+              
+            > __closed__
+            >> Not accepting new access units and in a closed complete state on the underlying store.
+          post:
+            is: [resourceNotFound]
+            description: Start the process of closing the essence component file and stop accepting new access units.
+            responses:
+              204:
+                description: |
+                  Process of closing the essence component file has started. Check media information via '../accessUnit' resource for current state.
+        /accessUnit:
+          type: mediaInfo
+          /{range}:
+            type: rangeScoped
+            get:
+        /gop:
+          type: mediaInfo
+          /{range}:
+            type: rangeScoped
+            get:
+        /timecode:
+          type: mediaInfo
+          /{range}:
+            type: rangeScoped
+            get:
+        /index:
+          type: mediaInfo
+          /{range}:
+            type: rangeScoped
+            get:
+        /partition:
+          type: mediaInfo
+          /{range}:
+            type: rangeScoped
+            description: |
+              Read complete MXF partitions from the essence component file in their native KLV format. _Index units_ are whole partitions, starting with `0` for the header partition. Timecode and offset position ranges are not supported.
+            get:
+
+    /version:
+      displayName: Version Collection
+      description: Create, list, read and replace and delete all version files stored in the AS-02 bundle.
+      is: [resourceNotFound]
       get:
         is: [paged, as02FileList]
         description: List details of all version files in the bundle.
       post:
         is: [optionalCreationID, as02FileCreated]
+        description: |
+          Create a new version file that automatically updates as the related open essence component files are growing.
         queryParameters:
           name:
             description: |
-              Name for the version file. 
+              Name for the version file. Should be a string that is suitable for use as a file name.
               
-              Omitting the name is equivalent to setting it to the name of the bundle's folder with `.mxf`
-              appended, thereby creating the bundle's default version file.
+              Omitting the name is equivalent to setting it to the name of the bundle's folder with `.mxf` appended, thereby creating the bundle's default version file.
             type: string
             required: false
             repeat: false
           master:
             description: |
-              UUID identifier for the _master essence component file_ in the bundle. This value must be provided 
-              and must be the identifier for the essence component file, not the rush identifier referenced from within 
-              the file.
+              [UUID](http://tools.ietf.org/html/rfc4122) for the _master essence component file_ in the bundle. This value must be provided and must be the identifier for the essence component file, not the rush identifier referenced from within the file.
               
               The _master essence component file_ within a version is the one that provides the overall edit rate for 
               the version file and contains the timecode track that will be used as the output timecode track for the 
@@ -481,141 +556,196 @@ traits:
             pattern: "(urn:uuid:)?[0-9a-fA-f]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
             required: true
             repeat: false
-          component:
+          component: 
             description: |
-              Zero or more essence component files that are synchronous with the master component and being recorded at 
-              the same time as part of this version. The master essence component file should not be repeated here. If only
-              a single master essence component file exists for the version file, there is no need to list it here.
+              Zero or more essence component files that are synchronous with the master component and being recorded at  the same time as part of this version. The master essence component file should not be repeated here. If only a single master essence component file exists for the version file, there is no need to list it here.
             type: string
             pattern: "(urn:uuid:)?[0-9a-fA-f]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
             repeat: true
+            required: false
         responses:
           400:
+            description: |
+              Problem creating the version file for reasons including:
+                  
+              * Invalid query parameters;
+              * Conflicts with existing identifiers;
+              * Master essence component file included as a component.
             body:
               application/xml:
-                description: |
-                  Problem creating the essence compomponent for reasons including:
-                  
-                  * Invalid query parameters;
-                  * Conflicts with existing identifiers.
-                schema: !include error.xsd     
+                schema: Error
+      /{versionID}:
+        displayName: Version File
+        is: [resourceNotFound]
+        uriParameters:
+          versionID:
+            type: string
+            description:
+              Either the `FileID` or the `Path` of the file as stored in the manifest file. The `.mxf` part of the path may be omitted.
+        description: Access manifest information about the identified version file. 
+        get:
+          is: [as02FileDetails]
+          description: Retrieve details about the identified version file from the containing bundle's manifest file.
+        delete:
+          description: Delete the identified version file from the bundle.
+          responses:
+            204:
+              description: Identified version file has been successfully deleted from the bundle.        
+        /aaf-xml:
+          displayName: Version File as XML
+          type: aafXml
+          description: |
+            Read the version file in XML format. 
+            
+            Note that writing in Reg-XML format is not supported.
+        /stream:
+            displayName: KLV-format Version File
+            type: mxfStream
       /default:
         displayName: Default Version File
-        is: resourceNotFound
+        is: [resourceNotFound]
         description: |
-          Access information about the default version file within the bundle. The default version is 
-          a version file inside the AS-02 bundle with the same name as the folder and a `.mxf` file extension.          
-        get: 
-          is: as02FileDetails
-          description: Retrieve bundle manifest details type about the defualt version file.
+          Access information about the default version file within the bundle. The default version is a version file inside the AS-02 bundle with the same name as the cntaining folder with a `.mxf` file extension.
+        get:
+          is: [as02FileDetails]
+          description: Retrieve the containing bundle's manifest details about the defualt version file.
         delete:
-          description: Delete default version file for the bundle.
+          description: Delete the detault version file from the bundle.
           responses:
-            204: # No content, so not defining a MIME type
-              description: Default version file successfully deleted from the bundle.   
+            204:
+              description: Default version file has been successfully deleted from the bundle.
         /aaf-xml:
-          is: resourceNotFound
-          get:
-            description: |
-              Retrieve MXF header information from the default version file in Reg-XML format, consisting of a serialization
-              of all non-stream data contained in the `Preface` element of the MXF file. 
-            responses:
-              200:
-                application/xml:
-                  schema: !include ST2001-2b-2013.xsd
-        /stream:
-          is: resourceNotFound
-          get:
-            description: Streams that default version file as an MXF file as stored in the AS-02 bundle.
-            responses:
-              200:
-                application/mxf:
-                  description: MXF default version file.
-          put:
-            is: as02FileDetails
-            description: Create or replace the default version file for the bundle.
-            body:
-              application/mxf:
-                description: MXF file to upload as the new or replacement defuault version file.
-            responses:
-              400:
-                application/xml:
-                  description: |
-                    Problem creating or replacing the default version file, such as it does not appear to be a valid version
-                    file.
-                  schema: !include error.xsd  
-      /{versionID}:
-        displayName: Specific Version File
-        is: resourceNotFound
-        description: |
-          Access information about the version file with the given <<versionID>>.
-          
-          The <<versionID>> may take two forms:
-          
-          * The UUID providing the identity of a version file, which is the version files primary package identifier.
-          * The name of the version file with or wothout the `.mxf` file extension.
-        get: 
-          is: as02FileDetails
-          description: Retrieve bundle manifest type details about the identified version file.
-        delete:
-          description: Delete default version file for the bundle.
-          responses:
-            204: # No content, so not defining a MIME type
-              description: Default version file successfully deleted from the bundle.   
-         
-         
-  /shim.xml:
-    is: resourceNotFound # Bundle not found or shim file does not exist
-    displayName: Shim File
-    description: Access information about the AS-02 shim file stored set for this bundle.
-    get: 
-      description: Read the AS-02 shim file stored for this bundle.
-      responses:
-        200:
-          application/xml:
-            schema: !include AS-02Shim.xsd
-    put:
-      description: Create or replace the AS-02 shim file stored for this bundle.
-      body:
-        application/xml:
-          schema: !include AS-02Shim.xsd
-      responses:
-        204: # No content
-          description: Shim file was successfully parsed and stored inside the AS-02 bundle.
-        400:
-          application/xml:
-            description: Invalid AS-02 shim document posted.
-    post:
-      description: Create or replace the AS-02 shim file using query parameters.
-      queryParameters:
-        name:
-          type: string
-          description: Human-readable identifier for the shim.
-          required: false
-          default: QStack rasotwo default shim
-        ID:
-          type: string
+          displayName: Default Version File as XML
+          type: aafXml
           description: |
-            URI for the shim, which should be a resovable reference to an external document that defines the shim.
-            Should be a valid URI but does not need to be resovable at the time of the request.
-          required: false
-          default: http://amwa.tv/as-02/defaultShim
-        annotation:
-          type: string
-          description: Set of descriptions for the shim.
-          repeat: true
-          required: false
+            Read the default version file in XML format. 
+            
+            Note that writing in Reg-XML format is not supported.
+        /stream:
+            displayName: KLV-format Default Version File
+            type: mxfStream
+            description: Read or write default version file in its native KLV format.
+          
+    /extra:
+      displayName: Extra Folder Contents
+      is: [resourceNotFound]
+      description: | 
+        Access to create, reasd, update and delete vendor-specific sub-folders of the AS-02 bundle's extra folder.
+      get:
+        is: [paged, as02FileList]
+        description: Retrieve a list of all vendor sub-folders in the extra folder.
+      /{vendorName}:
+        displayName: Vendor Folder Contents
+        is: [resourceNotFound]
+        uriParameters:
+          vendorName:
+            type: string
+            description: |
+              Name of a vendor-specific sub-folder inside the AS-02 bundle extra folder. By concention, this is a the same as the domain name of the company.
+              
+              As RAML does not support dynamic nested resource paths, access to vendor sub-paths is limited to a depth of 3 subfolders.
+            example: quantel.com
+        description: Represents a specific vendor subfolder called __vendorName__ within the AS-02 bundle.
+        get:
+          is: [paged, as02FileList]
+          description: | 
+            Read details of all files in the folder with `Path` set to `extra/{vendorName}` in the comntaining bundle manifest file.
+        post:
+        delete:
+        /{path1}/{path2}/{path3}/{path4}:
+          displayName: Extra Folder or File
+          is: [resourceNotFound]
+          uriParameters:
+            path1:
+              type: string
+              description: |
+                Identifies AS-02 file or folder with element `Path` set to `extra/{vendorName}/{path1}` in the containing bundle manifest file. 
+              required: true
+            path2:
+              type: string
+              description: |
+                Identifies AS-02 file or folder with element `Path` set to `extra/{vendorName}/{path1}/{path2}` in the containing bundle manifest file. 
+              required: false
+            path3:
+              type: string
+              description: |
+                Identifies AS-02 file or folder with element `Path` set to `extra/{vendorName}/{path1}/{path2}/{path3}` in the containing bundle manifest file. 
+              required: false
+            path4:
+              type: string
+              description: |
+                Identifies AS-02 file or folder with element `Path` set to `extra/{vendorName}/{path1}/{path2}/{path3}/{path4}` in the containing bundle manifest file. 
+              required: false
+          get:
+          delete:
+          /stream:
+            get:
+            put:
+          
+    /shim.xml:
+      displayName: Shim File
+      is: [resourceNotFound]
+      description: Create, read or update the AS-02 shim file stored for the bundle.
+      get:
+        description: Read the AS-02 shim file stored for this bundle.
         responses:
-          201: 
-            application/xml:
-              description: The newly created or updated shim file for the bundle.
-              schema: !include AS-02Shim.xsd
+          200:
+            body:
+              application/xml:
+                schema: Shim
+      put:
+        description: Create or replace the AS-02 shim file stored for this bundle.
+        body:
+          application/xml:
+            schema: Shim
+        responses:
+          204:
+            description: Shim file was successfully validated and stored inside the AS-02 bundle.
           400:
-            application/xml:
-              description: Problem with the query parameters passed.
-              schema: !include error.xsd
-      
+            description: Invalid AS-02 shim document provided.
+            body:
+              application/xml:
+                schema: Shim
+      post:
+        description: Create or replace the existing AS-02 shim file using query parameters.
+        queryParameters:
+          name:
+            type: string
+            description: Human-readable identifier for the shim.
+            required: false
+            default: QStack rasotwo default shim
+          ID:
+            type: string
+            description: |
+              URI for the shim, which should be a resovable reference to an external document that defines the shim. Should be a valid URI but does not need to be resovable at the time of the request.
+            required: false
+            default: http://amwa.tv/as-02/as-02/defaultShim
+          annotation:
+            type: string
+            description: Set of descriptions for the shim.
+            repeat: true
+            required: false
+        responses:
+          201:
+            description: The newly created or replaced shim file for the bundle.
+            body:
+              application/xml:
+                schema: Shim
+          400:
+            description: Problem detected with the given query parameters.
+            body:
+              application/xml:
+                schema: Error
 /ping:
-  displayName: Service Status Check
-      
-    
+  displayName: Service Status
+  description: |
+    Provided status information about the health of the service, including whether the service can access other
+      services that it is dependent on, such as file systems, databases or search engines.
+  get:
+    responses:
+      200:
+        description: The service is operating normally and cannot detect any issues.
+      500:
+        description: A system-level problem is precenting the service from operating as normal.
+      502:
+        description: A problem has been detected accessing a dependent service, such as a database or search engine.
